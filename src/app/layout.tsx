@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, Montserrat } from 'next/font/google'
 import './globals.css'
-import { LocalBusinessJsonLd } from 'next-seo'
 import Script from 'next/script'
 
 const playfair = Playfair_Display({ subsets: ['latin'], weight: '700' })
@@ -58,43 +57,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={`${playfair.className} ${montserrat.className}`}>
-        <LocalBusinessJsonLd
-          type="LocalBusiness"
-          id="https://chimacoffee.vercel.app"
-          name="Chima Coffee"
-          description="Experience the finest coffee at Chima Coffee. From rich espressos to delicious pastries, enjoy quality brews in a cozy atmosphere."
-          url="https://chimacoffee.vercel.app"
-          telephone="+1-234-567-890"
-          address={{
-            streetAddress: "123 Coffee Street",
-            addressLocality: "Brew City",
-            addressRegion: "Coffee Land",
-            postalCode: "12345",
-            addressCountry: "US",
-          }}
-          geo={{
-            latitude: "40.7128",
-            longitude: "-74.0060",
-          }}
-          images={["https://images.unsplash.com/photo-1559056199-641a0ac8b55e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=800"]}
-          openingHours={[
-            {
-              opens: "07:00",
-              closes: "19:00",
-              dayOfWeek: [
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-              ],
-            },
-          ]}
-        />
-        {children}
-      </body>
+      <body className={`${playfair.className} ${montserrat.className}`}>{children}</body>
     </html>
   )
 }
