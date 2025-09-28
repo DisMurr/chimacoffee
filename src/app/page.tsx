@@ -9,7 +9,7 @@ export default function Home() {
               <span className="text-2xl">☕</span>
               <h1 className="text-xl font-bold text-white">Chima Coffee</h1>
             </div>
-            <div className="flex space-x-6">
+            <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
               <a href="/" className="text-white hover:text-amber-200 transition-colors">Home</a>
               <a href="/menu" className="text-white hover:text-amber-200 transition-colors">Menu</a>
               <a href="#" className="text-white hover:text-amber-200 transition-colors">About</a>
@@ -20,21 +20,22 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative py-32 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-amber-600/20 to-orange-600/20"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-200/30 via-transparent to-transparent"></div>
-        <div className="relative max-w-4xl mx-auto text-center">
-          <h2 className="text-6xl font-bold text-amber-900 mb-6 animate-fade-in">
+      <section className="relative py-32 px-4 overflow-hidden min-h-[70vh] flex items-center">
+        <div className="absolute inset-0 bg-cover bg-center" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1509042239860-f550ce710b93?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80)'}}></div>
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-amber-900/60 to-orange-900/60"></div>
+        <div className="relative max-w-4xl mx-auto text-center text-white">
+          <h2 className="text-6xl font-bold mb-6 animate-fade-in drop-shadow-lg">
             Welcome to Chima Coffee
           </h2>
-          <p className="text-2xl text-amber-800 mb-8 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-2xl mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-md">
             Indulge in the perfect blend of rich aromas and exquisite flavors. Our expertly crafted coffee awaits you.
           </p>
           <div className="flex justify-center space-x-4">
             <button className="bg-amber-600 text-white px-8 py-4 rounded-full hover:bg-amber-700 transition-all duration-300 transform hover:scale-105 shadow-lg text-lg font-semibold">
               Order Now
             </button>
-            <a href="/menu" className="border-2 border-amber-600 text-amber-600 px-8 py-4 rounded-full hover:bg-amber-600 hover:text-white transition-all duration-300 text-lg font-semibold">
+            <a href="/menu" className="border-2 border-white text-white px-8 py-4 rounded-full hover:bg-white hover:text-amber-900 transition-all duration-300 text-lg font-semibold">
               View Menu
             </a>
           </div>
@@ -91,16 +92,22 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <h3 className="text-4xl font-bold text-amber-900 mb-16">What Our Customers Say</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="bg-white p-6 rounded-lg shadow-md relative">
+              <div className="text-4xl text-amber-300 mb-4">"</div>
               <p className="text-amber-700 italic mb-4">"The best coffee I've ever had! The atmosphere is perfect for working."</p>
+              <div className="text-yellow-400 mb-2">★★★★★</div>
               <p className="font-semibold text-amber-900">- Sarah M.</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="bg-white p-6 rounded-lg shadow-md relative">
+              <div className="text-4xl text-amber-300 mb-4">"</div>
               <p className="text-amber-700 italic mb-4">"Amazing pastries and friendly staff. My new favorite spot!"</p>
+              <div className="text-yellow-400 mb-2">★★★★★</div>
               <p className="font-semibold text-amber-900">- John D.</p>
             </div>
-            <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="bg-white p-6 rounded-lg shadow-md relative">
+              <div className="text-4xl text-amber-300 mb-4">"</div>
               <p className="text-amber-700 italic mb-4">"Their cold brew is incredible. Highly recommend!"</p>
+              <div className="text-yellow-400 mb-2">★★★★★</div>
               <p className="font-semibold text-amber-900">- Emma L.</p>
             </div>
           </div>
