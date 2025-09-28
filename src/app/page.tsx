@@ -1,85 +1,61 @@
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-in-200/30 lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Welcome to Chima Coffee
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-orange-100">
+      {/* Header */}
+      <header className="p-4 text-center">
+        <h1 className="text-5xl font-bold text-amber-900">☕ Chima Coffee</h1>
+        <p className="text-lg text-amber-700 mt-2">Brewing the finest coffee since 2025</p>
+      </header>
+
+      {/* Hero Section */}
+      <section className="text-center py-20 px-4">
+        <h2 className="text-4xl font-semibold text-amber-900 mb-4">Welcome to Chima Coffee</h2>
+        <p className="text-xl text-amber-800 mb-8 max-w-2xl mx-auto">
+          Experience the rich aroma and bold flavors of our expertly crafted coffee. From single-origin beans to creamy lattes, we serve perfection in every cup.
         </p>
-      </div>
+        <button className="bg-amber-600 text-white px-8 py-3 rounded-lg hover:bg-amber-700 transition-colors text-lg font-semibold">
+          Order Now
+        </button>
+      </section>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:-translate-y-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:translate-y-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <h1 className="text-4xl font-bold">Chima Coffee</h1>
-      </div>
+      {/* Features Section */}
+      <section className="py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h3 className="text-3xl font-bold text-center text-amber-900 mb-12">What We Offer</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <div className="text-4xl mb-4">🍵</div>
+              <h4 className="text-2xl font-semibold text-amber-900 mb-3">Menu</h4>
+              <p className="text-amber-700">Explore our diverse menu of coffees, teas, and freshly baked pastries made with love.</p>
+            </div>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="#"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Menu{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore our coffee menu.
-          </p>
-        </a>
+            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <div className="text-4xl mb-4">🏢</div>
+              <h4 className="text-2xl font-semibold text-amber-900 mb-3">About</h4>
+              <p className="text-amber-700">Learn about our story, our passion for coffee, and our commitment to quality and sustainability.</p>
+            </div>
 
-        <a
-          href="#"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            About{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Chima Coffee.
-          </p>
-        </a>
+            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <div className="text-4xl mb-4">📞</div>
+              <h4 className="text-2xl font-semibold text-amber-900 mb-3">Contact</h4>
+              <p className="text-amber-700">Get in touch for reservations, catering, or any questions. We're here to serve you.</p>
+            </div>
 
-        <a
-          href="#"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Contact{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Get in touch.
-          </p>
-        </a>
+            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+              <div className="text-4xl mb-4">🛒</div>
+              <h4 className="text-2xl font-semibold text-amber-900 mb-3">Order</h4>
+              <p className="text-amber-700">Place your order online for pickup or delivery. Fresh coffee at your doorstep.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <a
-          href="#"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Order{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Place your order.
-          </p>
-        </a>
-      </div>
-    </main>
+      {/* Footer */}
+      <footer className="bg-amber-900 text-white py-8 text-center">
+        <p className="text-lg">&copy; 2025 Chima Coffee. All rights reserved.</p>
+        <p className="mt-2">Visit us at 123 Coffee Street, Brew City, Coffee Land</p>
+        <p className="mt-2">📧 info@chimacoffee.com | 📞 (123) 456-7890</p>
+      </footer>
+    </div>
   )
 }
