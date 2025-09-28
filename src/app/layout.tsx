@@ -6,6 +6,7 @@ const playfair = Playfair_Display({ subsets: ['latin'], weight: '700' })
 const montserrat = Montserrat({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://chimacoffee.vercel.app'),
   title: 'Chima Coffee - Premium Coffee & Pastries',
   description: 'Experience the finest coffee at Chima Coffee. From rich espressos to delicious pastries, enjoy quality brews in a cozy atmosphere. Order online for pickup or delivery.',
   keywords: ['coffee', 'espresso', 'latte', 'pastries', 'cafe', 'brew', 'Chima Coffee'],
