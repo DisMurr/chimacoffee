@@ -27,6 +27,7 @@ export default function Home() {
               <div className="text-4xl mb-4">🍵</div>
               <h4 className="text-2xl font-semibold text-amber-900 mb-3">Menu</h4>
               <p className="text-amber-700">Explore our diverse menu of coffees, teas, and freshly baked pastries made with love.</p>
+              <a href="/menu" className="mt-4 inline-block bg-amber-600 text-white px-4 py-2 rounded hover:bg-amber-700 transition-colors">View Menu</a>
             </div>
 
             <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
