@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import { FaStar, FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { FaStar, FaFacebook, FaInstagram, FaTwitter, FaBars, FaTimes } from 'react-icons/fa';
+import { useState } from 'react';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -12,6 +13,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 export default function Home() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
       {/* Navigation */}
@@ -22,13 +25,34 @@ export default function Home() {
               <span className="text-2xl">☕</span>
               <h1 className="text-xl font-bold text-white">Chima Coffee</h1>
             </div>
-            <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
+            {/* Desktop Menu */}
+            <div className="hidden md:flex space-x-6">
               <a href="/" className="text-white hover:text-yellow-300 transition-colors">Home</a>
               <a href="/menu" className="text-white hover:text-yellow-300 transition-colors">Menu</a>
               <a href="#" className="text-white hover:text-yellow-300 transition-colors">About</a>
               <a href="#" className="text-white hover:text-yellow-300 transition-colors">Contact</a>
             </div>
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden text-white"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+            </button>
           </div>
+          {/* Mobile Menu */}
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="md:hidden bg-amber-800 mt-4 rounded-lg p-4"
+            >
+              <a href="/" className="block text-white hover:text-yellow-300 transition-colors py-2">Home</a>
+              <a href="/menu" className="block text-white hover:text-yellow-300 transition-colors py-2">Menu</a>
+              <a href="#" className="block text-white hover:text-yellow-300 transition-colors py-2">About</a>
+              <a href="#" className="block text-white hover:text-yellow-300 transition-colors py-2">Contact</a>
+            </motion.div>
+          )}
         </div>
       </nav>
 
