@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 export type CartItem = {
   id: string;
@@ -21,6 +21,21 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
+
+  // Hydrate from localStorage on first mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('cart');
+      if (saved) setCart(JSON.parse(saved));
+    } catch {}
+  }, []);
+
+  // Persist on change
+  useEffect(() => {
+    try {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    } catch {}
+  }, [cart]);
 
   const addToCart = (item: Omit<CartItem, 'quantity'>) => {
     setCart((prev) => {
