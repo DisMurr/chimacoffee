@@ -12,12 +12,37 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-const FALLBACK_TESTIMONIALS = [
+type Testimonial = {
+  id: string;
+  name: string;
+  image_url?: string;
+  rating: number;
+  quote: string;
+};
+
+const DEFAULT_AVATAR =
+  'https://images.unsplash.com/photo-1527980965255-d3b416303d12?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80';
+
+function SafeImage(props: { src: string; alt: string; width: number; height: number; className?: string }) {
+  const [src, setSrc] = useState(props.src);
+  return (
+    <Image
+      src={src}
+      alt={props.alt}
+      width={props.width}
+      height={props.height}
+      className={props.className}
+      onError={() => setSrc(DEFAULT_AVATAR)}
+    />
+  );
+}
+
+const FALLBACK_TESTIMONIALS: Testimonial[] = [
   {
     id: 'fallback-1',
     name: 'Sarah M.',
     image_url:
-      'https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&w=150&q=80',
+      'https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
     rating: 5,
     quote: "The best coffee I've ever had! The atmosphere is perfect for working.",
   },
@@ -25,7 +50,7 @@ const FALLBACK_TESTIMONIALS = [
     id: 'fallback-2',
     name: 'John D.',
     image_url:
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
     rating: 5,
     quote: 'Amazing pastries and friendly staff. My new favorite spot!',
   },
@@ -33,7 +58,7 @@ const FALLBACK_TESTIMONIALS = [
     id: 'fallback-3',
     name: 'Emma L.',
     image_url:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80',
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80',
     rating: 5,
     quote: 'Their cold brew is incredible. Highly recommend!',
   },
@@ -87,8 +112,8 @@ export default function TestimonialsSection() {
           {testimonials.map((t) => (
             <SwiperSlide key={t.id}>
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <Image
-                  src={t.image_url}
+                <SafeImage
+                  src={t.image_url || DEFAULT_AVATAR}
                   alt={t.name}
                   width={80}
                   height={80}
