@@ -13,20 +13,44 @@ export default function Cart() {
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handleCheckout = async () => {
-    const stripe = await stripePromise;
-    if (!stripe) return;
+    try {
+      const stripe = await stripePromise;
+      if (!stripe) {
+        alert('Stripe failed to load.');
+        return;
+      }
 
-    const response = await fetch('/api/checkout_sessions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ items: cart }),
-    });
+      const res = await fetch('/api/checkout_sessions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: cart }),
+      });
 
-    const { id } = await response.json();
-    const result = await stripe.redirectToCheckout({ sessionId: id });
+      let payload: any = null;
+      try {
+        payload = await res.json();
+      } catch {
+        payload = null;
+      }
 
-    if (result.error) {
-      console.error(result.error.message);
+      if (!res.ok) {
+        const msg = payload?.error || `Checkout failed (${res.status})`;
+        alert(msg);
+        return;
+      }
+
+      const sessionId = payload?.id;
+      if (!sessionId) {
+        alert('Invalid checkout session response.');
+        return;
+      }
+
+      const result = await stripe.redirectToCheckout({ sessionId });
+      if (result.error) {
+        alert(result.error.message || 'Stripe redirect failed.');
+      }
+    } catch (e: any) {
+      alert(e?.message || 'Unexpected error during checkout.');
     }
   };
 
