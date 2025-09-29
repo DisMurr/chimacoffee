@@ -12,17 +12,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-import { supabase } from '../lib/supabase';
-
-type Testimonial = {
-  id: string | number;
-  name: string;
-  image_url: string;
-  rating: number;
-  quote: string;
-};
-
-const FALLBACK_TESTIMONIALS: Testimonial[] = [
+const FALLBACK_TESTIMONIALS = [
   {
     id: 'fallback-1',
     name: 'Sarah M.',
@@ -50,31 +40,26 @@ const FALLBACK_TESTIMONIALS: Testimonial[] = [
 ];
 
 export default function TestimonialsSection() {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>(FALLBACK_TESTIMONIALS);
+  const [testimonials, setTestimonials] = useState(FALLBACK_TESTIMONIALS);
 
   useEffect(() => {
     let isMounted = true;
     (async () => {
       try {
-        const { data, error, status } = await supabase
-          .from('testimonials')
-          .select('*');
-
-        if (error) {
-          // If table missing (404) or any error, keep fallback and log for debugging
-          console.warn('Supabase testimonials error:', { status, error });
+        const res = await fetch('/api/testimonials', { next: { revalidate: 60 } });
+        if (!res.ok) {
+          console.warn('Testimonials API error:', res.status);
           return;
         }
+        const data = await res.json();
         if (isMounted && Array.isArray(data) && data.length > 0) {
-          setTestimonials(data as Testimonial[]);
+          setTestimonials(data);
         }
       } catch (e) {
-        console.warn('Supabase testimonials fetch failed:', e);
+        console.warn('Testimonials fetch failed:', e);
       }
     })();
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false };
   }, []);
 
   return (
