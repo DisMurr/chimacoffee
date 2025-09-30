@@ -19,13 +19,13 @@ begin
   if found then
     -- Try to create a daily job; ignore errors if already exists
     begin
-      perform cron.schedule('purge_admin_auth_log_daily', '0 2 * * *', $$select public.purge_old_admin_auth_logs(90);$$);
+  perform cron.schedule('purge_admin_auth_log_daily', '0 2 * * *', 'select public.purge_old_admin_auth_logs(90)');
     exception when others then
       -- no-op: job may already exist or not permitted in this environment
       null;
     end;
   end if;
-end$$;
+end$$ language plpgsql;
 
 -- Index to speed up delete by ts already exists
 -- Optionally, create a limited view that excludes ip_raw for non-privileged reads
