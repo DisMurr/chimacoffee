@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 
 export default function AuthPage() {
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, signInWithProvider } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
@@ -71,6 +71,20 @@ export default function AuthPage() {
             <button className="underline" onClick={() => setMode('signin')}>Have an account? Sign in</button>
           )}
         </div>
+      </div>
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 shadow rounded p-6 mt-4 space-y-2">
+        <button
+          onClick={() => signInWithProvider('google')}
+          className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700"
+        >
+          Continue with Google
+        </button>
+        <button
+          onClick={() => signInWithProvider('github')}
+          className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 py-2 rounded hover:bg-gray-50 dark:hover:bg-gray-700"
+        >
+          Continue with GitHub
+        </button>
       </div>
     </div>
   );
