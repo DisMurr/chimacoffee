@@ -1,0 +1,22 @@
+name: Admin auth alerts
+
+on:
+  schedule:
+    - cron: '*/10 * * * *' # every 10 minutes
+  workflow_dispatch: {}
+
+jobs:
+  check-failures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci --omit=dev
+      - run: node scripts/alerts/check-admin-failures.mjs
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          ADMIN_ALERT_WINDOW_MIN: 10
+          ADMIN_ALERT_FAILURES_THRESHOLD: 20

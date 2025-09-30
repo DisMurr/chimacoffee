@@ -184,6 +184,18 @@ npm run lint
    - Connect custom domain (chimacoffee.com)
    - Enable SSL certificate
 
+### Admin security and ops
+
+- Admin session uses an opaque HMAC token with UA binding and a default 7d TTL; configure via env (`ADMIN_SESSION_TTL_SEC`).
+- Progressive hCaptcha is enabled after repeated failures; exponential backoff adds friction.
+- CSRF protection: login/logout POSTs check Origin; cookies are SameSite=Lax. Global CSP allows hCaptcha domains.
+- Secret rotation: set `ADMIN_SESSION_SECRET`, keep old secrets in `ADMIN_SESSION_SECRET_PREVIOUS` (comma-separated) until old sessions expire.
+- Denylist: revoke a specific session by adding its `jti` to `ADMIN_JTI_DENYLIST`.
+- Canonical host: set `CANONICAL_HOST` to force a single origin and avoid cookie split.
+- WAF: add Cloudflare/provider rate limit for `/api/admin/login` (e.g., 10/min/IP).
+- Alerts: set `SLACK_WEBHOOK_URL`. The scheduled workflow `.github/workflows/admin-alerts.yml` checks failure spikes every 10m.
+- Audit retention: migration `007_admin_auth_log_retention.sql` purges logs older than 90 days daily (if pg_cron available).
+
 ### Manual Deployment
 
 ```bash

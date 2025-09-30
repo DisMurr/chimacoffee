@@ -5,9 +5,9 @@ import { logAdminEvent } from '@/lib/adminAudit';
 // Failed login tracking (salted IP hash) in-memory
 type FailInfo = { count: number; first: number; last: number };
 const FAILS = new Map<string, FailInfo>();
-const THRESHOLD = 3; // attempts
-const WINDOW_SEC = 15 * 60; // 15 minutes
-const EXPIRE_SEC = 24 * 60 * 60; // 24 hours
+const THRESHOLD = Number(process.env.ADMIN_LOCKOUT_THRESHOLD || 3); // attempts
+const WINDOW_SEC = Number(process.env.ADMIN_FAILURE_WINDOW_SEC || 15 * 60); // 15 minutes
+const EXPIRE_SEC = Number(process.env.ADMIN_FAILURE_EXPIRE_SEC || 24 * 60 * 60); // 24 hours
 
 function getIp(req: NextRequest) {
   return (
@@ -145,7 +145,8 @@ export async function POST(req: NextRequest) {
 
   await resetFailures(req);
   const uaHash = await hashUserAgent(req.headers.get('user-agent'));
-  const payload = createAdminPayload(60 * 60 * 24 * 7, uaHash); // 7 days
+  const ttl = Number(process.env.ADMIN_SESSION_TTL_SEC || 60 * 60 * 24 * 7);
+  const payload = createAdminPayload(ttl, uaHash); // default 7 days
   const token = await signAdminSession(payload);
   const res = NextResponse.json({ ok: true });
   // Set cookie valid for 7 days
@@ -154,7 +155,7 @@ export async function POST(req: NextRequest) {
     secure: true,
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: ttl,
   });
   await logAdminEvent({
     event: 'admin_login_success',

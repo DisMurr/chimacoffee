@@ -48,15 +48,18 @@ export type AdminSessionPayload = {
   ua?: string; // optional user-agent hash binding
 };
 
-export function adminSessionSecret(): Uint8Array {
-  const secret = process.env.ADMIN_SESSION_SECRET || '';
-  if (!secret) throw new Error('Missing ADMIN_SESSION_SECRET');
-  // Accept raw utf-8 or base64url string; try to decode if looks url-safe
-  try {
-    return base64urlDecode(secret);
-  } catch {
-    return textEncoder(secret);
-  }
+export function adminSessionSecrets(): Uint8Array[] {
+  const current = process.env.ADMIN_SESSION_SECRET || '';
+  if (!current) throw new Error('Missing ADMIN_SESSION_SECRET');
+  const prevRaw = process.env.ADMIN_SESSION_SECRET_PREVIOUS || '';
+  const items = [current, ...prevRaw.split(',').map((s) => s.trim()).filter(Boolean)];
+  return items.map((s) => {
+    try {
+      return base64urlDecode(s);
+    } catch {
+      return textEncoder(s);
+    }
+  });
 }
 
 export function createAdminPayload(ttlSeconds = 60 * 60 * 24 * 7, uaHash?: string): AdminSessionPayload {
@@ -78,7 +81,7 @@ export async function hashUserAgent(ua: string | null | undefined): Promise<stri
 }
 
 export async function signAdminSession(payload: AdminSessionPayload, secretBytes?: Uint8Array): Promise<string> {
-  const secret = secretBytes ?? adminSessionSecret();
+  const secret = secretBytes ?? adminSessionSecrets()[0];
   const payloadJson = JSON.stringify(payload);
   const payloadB64 = base64urlEncode(textEncoder(payloadJson));
   const sig = await hmacSha256(secret, textEncoder(payloadB64));
@@ -88,16 +91,22 @@ export async function signAdminSession(payload: AdminSessionPayload, secretBytes
 
 export async function verifyAdminSession(token: string, secretBytes?: Uint8Array): Promise<AdminSessionPayload | null> {
   try {
-    const secret = secretBytes ?? adminSessionSecret();
     const [payloadB64, sigB64] = token.split('.');
     if (!payloadB64 || !sigB64) return null;
-    const expected = await hmacSha256(secret, textEncoder(payloadB64));
     const given = base64urlDecode(sigB64);
-    if (given.length !== expected.length) return null;
-    // Constant-time compare
-    let ok = 0;
-    for (let i = 0; i < expected.length; i++) ok |= expected[i] ^ given[i];
-    if (ok !== 0) return null;
+    const secrets = secretBytes ? [secretBytes] : adminSessionSecrets();
+    let valid = false;
+    for (const sec of secrets) {
+      const expected = await hmacSha256(sec, textEncoder(payloadB64));
+      if (given.length !== expected.length) continue;
+      let ok = 0;
+      for (let i = 0; i < expected.length; i++) ok |= expected[i] ^ given[i];
+      if (ok === 0) {
+        valid = true;
+        break;
+      }
+    }
+    if (!valid) return null;
     const payloadStr = new TextDecoder().decode(base64urlDecode(payloadB64));
     const payload = JSON.parse(payloadStr) as AdminSessionPayload;
     if (payload.sub !== 'admin') return null;
