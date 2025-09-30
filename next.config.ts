@@ -16,17 +16,23 @@ const nextConfig = {
   async headers() {
     const csp = [
       "default-src 'self'",
+      "base-uri 'self'",
+      "object-src 'none'",
       // Allow inline styles due to Tailwind injector; prefer hashing if possible
-      "style-src 'self' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline' https:",
+      "style-src-elem 'self' 'unsafe-inline' https:",
       // hCaptcha scripts and frames when needed on /admin/login
-      "script-src 'self' 'unsafe-inline' https://js.hcaptcha.com https://www.googletagmanager.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.hcaptcha.com https://www.googletagmanager.com",
+      "script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://js.hcaptcha.com https://www.googletagmanager.com",
       "frame-src 'self' https://hcaptcha.com https://*.hcaptcha.com",
       // images from allowed domains
       "img-src 'self' data: https:",
       // connect for API calls
-      "connect-src 'self' https:",
+      "connect-src 'self' https: wss:",
       // fonts
-      "font-src 'self' data:",
+      "font-src 'self' data: https:",
+      // manifest
+      "manifest-src 'self'",
       // disallow everything else by default
     ].join('; ');
     return [
