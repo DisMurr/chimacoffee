@@ -6,7 +6,7 @@ export function middleware(req: NextRequest) {
   if (pathname.startsWith('/admin')) {
     const pwd = process.env.ADMIN_UI_PASSWORD;
     // allow API route—it already has its own auth
-    if (pathname.startsWith('/admin/ai-migration') || pathname.startsWith('/api/admin')) {
+    if (pathname.startsWith('/admin/login') || pathname.startsWith('/admin/ai-migration') || pathname.startsWith('/api/admin')) {
       return NextResponse.next();
     }
     const token = req.cookies.get('admin_ui_password')?.value || req.headers.get('x-admin-ui-password');

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
 
@@ -51,17 +52,7 @@ export default function AdminPage() {
               required
             />
           </div>
-          <div>
-            <label className="block text-sm font-semibold text-amber-900 dark:text-gray-200 mb-2">Admin Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 border border-amber-200 dark:border-gray-700 rounded focus:outline-none focus:ring-2 focus:ring-amber-400 dark:bg-gray-900"
-              placeholder="Enter admin password"
-              required
-            />
-          </div>
+          <p className="text-sm text-amber-800 dark:text-gray-300">This page is protected. If you aren’t logged in, go to <Link href="/admin/login" className="underline">Admin Login</Link>.</p>
           <div className="flex items-center justify-between">
             <button
               type="submit"
