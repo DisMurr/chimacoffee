@@ -3,6 +3,11 @@ import { logAdminEvent } from '@/lib/adminAudit';
 import { verifyAdminSession } from '@/lib/security';
 
 export async function POST(req: NextRequest) {
+  const origin = req.headers.get('origin');
+  const host = req.headers.get('host');
+  if (origin && host && !origin.endsWith(host)) {
+    return NextResponse.json({ error: 'Bad origin' }, { status: 403 });
+  }
   const res = NextResponse.json({ ok: true });
   res.cookies.set('admin_session', '', { httpOnly: true, secure: true, sameSite: 'lax', path: '/', maxAge: 0 });
   const token = req.cookies.get('admin_session')?.value || '';

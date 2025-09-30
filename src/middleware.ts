@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { verifyAdminSession } from '@/lib/security';
+import { verifyAdminSession, hashUserAgent } from '@/lib/security';
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -17,8 +17,13 @@ export function middleware(req: NextRequest) {
     // We cannot await in middleware sync, but Next middleware supports async
     // so we convert function to async by returning a Promise
     return (async () => {
-      const ok = await verifyAdminSession(token);
-      if (!ok) return new NextResponse('Unauthorized', { status: 401 });
+      const payload = await verifyAdminSession(token);
+      if (!payload) return new NextResponse('Unauthorized', { status: 401 });
+      // Optional UA binding check
+      if (payload.ua) {
+        const currentUa = await hashUserAgent(req.headers.get('user-agent'));
+        if (currentUa !== payload.ua) return new NextResponse('Unauthorized', { status: 401 });
+      }
       return NextResponse.next();
     })() as any;
   }

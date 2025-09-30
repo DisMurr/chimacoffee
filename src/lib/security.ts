@@ -45,6 +45,7 @@ export type AdminSessionPayload = {
   exp: number; // seconds
   jti: string;
   salt: string; // random salt
+  ua?: string; // optional user-agent hash binding
 };
 
 export function adminSessionSecret(): Uint8Array {
@@ -58,13 +59,22 @@ export function adminSessionSecret(): Uint8Array {
   }
 }
 
-export function createAdminPayload(ttlSeconds = 60 * 60 * 24 * 7): AdminSessionPayload {
+export function createAdminPayload(ttlSeconds = 60 * 60 * 24 * 7, uaHash?: string): AdminSessionPayload {
   const iat = nowSeconds();
   const exp = iat + ttlSeconds;
   // Generate jti from random bytes
   const rnd = base64urlEncode(getRandomBytes(16));
   const salt = base64urlEncode(getRandomBytes(8));
-  return { sub: 'admin', iat, exp, jti: rnd, salt };
+  const payload: AdminSessionPayload = { sub: 'admin', iat, exp, jti: rnd, salt };
+  if (uaHash) payload.ua = uaHash;
+  return payload;
+}
+
+export async function hashUserAgent(ua: string | null | undefined): Promise<string> {
+  const text = ua || '';
+  const data = new TextEncoder().encode(text);
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return base64urlEncode(digest);
 }
 
 export async function signAdminSession(payload: AdminSessionPayload, secretBytes?: Uint8Array): Promise<string> {

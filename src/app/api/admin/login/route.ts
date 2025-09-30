@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createRateLimiter, ipKey } from '@/lib/rateLimit';
-import { createAdminPayload, signAdminSession } from '@/lib/security';
+import { createAdminPayload, signAdminSession, hashUserAgent } from '@/lib/security';
 import { logAdminEvent } from '@/lib/adminAudit';
 // Failed login tracking (salted IP hash) in-memory
 type FailInfo = { count: number; first: number; last: number };
@@ -93,6 +93,12 @@ async function verifyHCaptcha(token: string | undefined, req: NextRequest) {
 const limiter = createRateLimiter({ capacity: 5, refillPerSec: 0.2 }); // burst 5, 1 req / 5s
 
 export async function POST(req: NextRequest) {
+  // CSRF defense-in-depth: check Origin if provided
+  const origin = req.headers.get('origin');
+  const host = req.headers.get('host');
+  if (origin && host && !origin.endsWith(host)) {
+    return NextResponse.json({ error: 'Bad origin' }, { status: 403 });
+  }
   const rate = limiter.take(ipKey(req, 'admin:login'));
   if (!rate.allowed) return NextResponse.json({ error: 'Too Many Requests' }, { status: 429, headers: { 'Retry-After': String(rate.retryAfter) } });
   const body = await req.json().catch(() => ({} as any));
@@ -119,6 +125,13 @@ export async function POST(req: NextRequest) {
   }
   if (password !== ADMIN_UI_PASSWORD) {
     await recordFailure(req);
+    // Exponential backoff between 500-1500ms * attempts factor
+    const key = await keyForReq(req);
+    const info = FAILS.get(key);
+    const attempt = info?.count || 1;
+    const base = 500 + Math.floor(Math.random() * 1000);
+    const delay = Math.min(5000, base * Math.min(5, attempt));
+    await new Promise((r) => setTimeout(r, delay));
     await logAdminEvent({
       event: 'admin_login_failure',
       ip_hash: await keyForReq(req),
@@ -131,7 +144,8 @@ export async function POST(req: NextRequest) {
   }
 
   await resetFailures(req);
-  const payload = createAdminPayload(60 * 60 * 24 * 7); // 7 days
+  const uaHash = await hashUserAgent(req.headers.get('user-agent'));
+  const payload = createAdminPayload(60 * 60 * 24 * 7, uaHash); // 7 days
   const token = await signAdminSession(payload);
   const res = NextResponse.json({ ok: true });
   // Set cookie valid for 7 days
