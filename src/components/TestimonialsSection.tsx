@@ -71,7 +71,7 @@ export default function TestimonialsSection() {
     let isMounted = true;
     (async () => {
       try {
-        const res = await fetch('/api/testimonials', { next: { revalidate: 60 } });
+  const res = await fetch('/api/testimonials', { cache: 'no-store' });
         if (!res.ok) {
           console.warn('Testimonials API error:', res.status);
           return;

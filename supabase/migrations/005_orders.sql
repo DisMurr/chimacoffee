@@ -13,7 +13,14 @@ create table if not exists public.orders (
 alter table public.orders enable row level security;
 
 -- Users can see their own orders
-create policy if not exists "Users can read own orders"
+do $$
+begin
+  if exists (select 1 from pg_policies where schemaname='public' and tablename='orders' and policyname='Users can read own orders') then
+    execute 'drop policy "Users can read own orders" on public.orders';
+  end if;
+end$$;
+
+create policy "Users can read own orders"
   on public.orders for select
   to authenticated
   using (user_id = auth.uid());

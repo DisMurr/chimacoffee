@@ -6,10 +6,13 @@ export function middleware(req: NextRequest) {
   // Canonical host redirect
   const canonicalRaw = process.env.CANONICAL_HOST; // e.g., www.chimacoffee.com or https://www.chimacoffee.com
   const host = req.headers.get('host') || '';
+  const accept = req.headers.get('accept') || '';
+  const method = req.method || 'GET';
+  const isHtmlNav = accept.includes('text/html') && method === 'GET';
   const canonical = canonicalRaw
     ? canonicalRaw.replace(/^https?:\/\//, '').split('/')[0]
     : undefined;
-  if (canonical && host && host !== canonical) {
+  if (canonical && host && host !== canonical && isHtmlNav) {
     // Avoid redirect loops for localhost/dev
     const isLocal = host.startsWith('localhost') || host.startsWith('127.0.0.1');
     if (!isLocal) {

@@ -24,17 +24,30 @@ for each row execute function public.set_updated_at();
 -- RLS: users can view and update only their row
 alter table public.profiles enable row level security;
 
-create policy if not exists "Users can view own profile"
+do $$
+begin
+  if exists (select 1 from pg_policies where schemaname='public' and tablename='profiles' and policyname='Users can view own profile') then
+    execute 'drop policy "Users can view own profile" on public.profiles';
+  end if;
+  if exists (select 1 from pg_policies where schemaname='public' and tablename='profiles' and policyname='Users can upsert own profile') then
+    execute 'drop policy "Users can upsert own profile" on public.profiles';
+  end if;
+  if exists (select 1 from pg_policies where schemaname='public' and tablename='profiles' and policyname='Users can update own profile') then
+    execute 'drop policy "Users can update own profile" on public.profiles';
+  end if;
+end$$;
+
+create policy "Users can view own profile"
   on public.profiles for select
   to authenticated
   using (auth.uid() = id);
 
-create policy if not exists "Users can upsert own profile"
+create policy "Users can upsert own profile"
   on public.profiles for insert
   to authenticated
   with check (auth.uid() = id);
 
-create policy if not exists "Users can update own profile"
+create policy "Users can update own profile"
   on public.profiles for update
   to authenticated
   using (auth.uid() = id)

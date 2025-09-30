@@ -28,10 +28,12 @@ end;
 $$ language plpgsql security definer;
 
 -- Attach triggers to key tables (extend as needed)
+drop trigger if exists menu_items_audit on public.menu_items;
 create trigger menu_items_audit
   after insert or update or delete on public.menu_items
   for each row execute function public.audit_trigger_func();
 
+drop trigger if exists testimonials_audit on public.testimonials;
 create trigger testimonials_audit
   after insert or update or delete on public.testimonials
   for each row execute function public.audit_trigger_func();

@@ -14,7 +14,12 @@ const { Client } = require('pg');
     console.error('Missing SUPABASE_DB_URL');
     process.exit(1);
   }
-  const client = new Client({ connectionString: dbUrl });
+  const sslMode = process.env.PGSSLMODE || '';
+  const rejectUnauthorized = process.env.PGSSLREJECTUNAUTHORIZED !== 'false';
+  const client = new Client({
+    connectionString: dbUrl,
+    ssl: sslMode ? { rejectUnauthorized } : undefined,
+  });
   await client.connect();
   try {
     await client.query(`create table if not exists public.schema_migrations (
