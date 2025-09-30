@@ -19,7 +19,7 @@ const nextConfig = {
       // Allow inline styles due to Tailwind injector; prefer hashing if possible
       "style-src 'self' 'unsafe-inline'",
       // hCaptcha scripts and frames when needed on /admin/login
-      "script-src 'self' https://js.hcaptcha.com",
+      "script-src 'self' 'unsafe-inline' https://js.hcaptcha.com https://www.googletagmanager.com",
       "frame-src 'self' https://hcaptcha.com https://*.hcaptcha.com",
       // images from allowed domains
       "img-src 'self' data: https:",
