@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createRateLimiter, ipKey } from '@/lib/rateLimit';
+
+const limiter = createRateLimiter({ capacity: 5, refillPerSec: 0.2 }); // burst 5, 1 req / 5s
 
 export async function POST(req: NextRequest) {
+  const rate = limiter.take(ipKey(req, 'admin:login'));
+  if (!rate.allowed) return NextResponse.json({ error: 'Too Many Requests' }, { status: 429, headers: { 'Retry-After': String(rate.retryAfter) } });
   const body = await req.json().catch(() => ({} as any));
   const password = body?.password as string | undefined;
   const ADMIN_UI_PASSWORD = process.env.ADMIN_UI_PASSWORD || '';

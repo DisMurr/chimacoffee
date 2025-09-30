@@ -10,6 +10,7 @@ export default function AdminPage() {
   const [password, setPassword] = useState('')
   const [status, setStatus] = useState<string | null>(null)
   const [pending, setPending] = useState(false)
+  const [loggingOut, setLoggingOut] = useState(false)
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -35,6 +36,16 @@ export default function AdminPage() {
     }
   }
 
+  const logout = async () => {
+    setLoggingOut(true)
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' })
+      setStatus('Logged out')
+    } finally {
+      setLoggingOut(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-700 dark:text-white">
       <Navigation />
@@ -52,7 +63,12 @@ export default function AdminPage() {
               required
             />
           </div>
-          <p className="text-sm text-amber-800 dark:text-gray-300">This page is protected. If you aren’t logged in, go to <Link href="/admin/login" className="underline">Admin Login</Link>.</p>
+          <div className="flex items-center justify-between text-sm text-amber-800 dark:text-gray-300">
+            <p>This page is protected. If you aren’t logged in, go to <Link href="/admin/login" className="underline">Admin Login</Link>.</p>
+            <button type="button" onClick={logout} disabled={loggingOut} className="underline">
+              {loggingOut ? 'Logging out…' : 'Logout'}
+            </button>
+          </div>
           <div className="flex items-center justify-between">
             <button
               type="submit"
