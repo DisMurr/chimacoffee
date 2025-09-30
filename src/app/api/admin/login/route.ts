@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createRateLimiter, ipKey } from '@/lib/rateLimit';
+import { createAdminPayload, signAdminSession } from '@/lib/security';
 
 const limiter = createRateLimiter({ capacity: 5, refillPerSec: 0.2 }); // burst 5, 1 req / 5s
 
@@ -13,9 +14,11 @@ export async function POST(req: NextRequest) {
   if (!password) return NextResponse.json({ error: 'Missing password' }, { status: 400 });
   if (password !== ADMIN_UI_PASSWORD) return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
 
+  const payload = createAdminPayload(60 * 60 * 24 * 7); // 7 days
+  const token = await signAdminSession(payload);
   const res = NextResponse.json({ ok: true });
   // Set cookie valid for 7 days
-  res.cookies.set('admin_ui_password', password, {
+  res.cookies.set('admin_session', token, {
     httpOnly: true,
     secure: true,
     sameSite: 'lax',
