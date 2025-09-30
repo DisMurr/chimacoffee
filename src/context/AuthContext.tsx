@@ -12,7 +12,7 @@ type AuthContextValue = {
   user: User | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error?: string }>; 
-  signUp: (email: string, password: string) => Promise<{ error?: string }>; 
+  signUp: (email: string, password: string) => Promise<{ error?: string; needsConfirmation?: boolean }>; 
   signOut: () => Promise<void>;
   signInWithProvider: (provider: 'google' | 'github') => Promise<{ error?: string }>;
 };
@@ -46,9 +46,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function signUp(email: string, password: string) {
-    const { error } = await supabase.auth.signUp({ email, password });
+    const redirectTo = typeof window !== 'undefined' ? `${window.location.origin}/auth/confirm` : undefined;
+    const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: redirectTo } });
     if (error) return { error: error.message };
-    return {};
+    // If email confirmations are enabled, session will be null and a confirmation email was sent
+    const needsConfirmation = !data.session;
+    return { needsConfirmation };
   }
 
   async function signOut() {

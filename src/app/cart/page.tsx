@@ -4,11 +4,13 @@ import { useCart } from '../../context/CartContext';
 import Navigation from '../../components/Navigation';
 import Footer from '../../components/Footer';
 import { loadStripe } from '@stripe/stripe-js';
+import { useAuth } from '@/context/AuthContext';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
 export default function Cart() {
   const { cart, removeFromCart, updateQuantity, clearCart } = useCart();
+  const { user } = useAuth();
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -23,7 +25,7 @@ export default function Cart() {
       const res = await fetch('/api/checkout_sessions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: cart }),
+        body: JSON.stringify({ items: cart, user_id: user?.id ?? null }),
       });
 
       let payload: any = null;

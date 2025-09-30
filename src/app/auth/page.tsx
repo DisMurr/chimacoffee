@@ -18,12 +18,18 @@ export default function AuthPage() {
     setError(null);
     setLoading(true);
     const fn = mode === 'signin' ? signIn : signUp;
-    const { error } = await fn(email, password);
+    const result = await fn(email, password) as any;
+    const { error, needsConfirmation } = result || {};
     setLoading(false);
     if (error) {
       setError(error);
     } else {
-      router.push('/account');
+      if (needsConfirmation) {
+        setError(null);
+        alert('Check your email to confirm your account.');
+      } else {
+        router.push('/account');
+      }
     }
   }
 

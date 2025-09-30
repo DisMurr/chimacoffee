@@ -29,7 +29,10 @@ export default function Navigation() {
             <Link href="/about" className="text-white hover:text-yellow-300 dark:text-gray-200 dark:hover:text-yellow-300 transition-colors" aria-label="About">About</Link>
             <Link href="/contact" className="text-white hover:text-yellow-300 transition-colors">Contact</Link>
             {user ? (
-              <Link href="/account" className="text-white hover:text-yellow-300 transition-colors">Account</Link>
+              <>
+                <Link href="/account/orders" className="text-white hover:text-yellow-300 transition-colors">My Orders</Link>
+                <Link href="/account" className="text-white hover:text-yellow-300 transition-colors">Account</Link>
+              </>
             ) : (
               <Link href="/auth" className="text-white hover:text-yellow-300 transition-colors">Sign In</Link>
             )}
@@ -56,7 +59,10 @@ export default function Navigation() {
             <Link href="/about" className="block text-white hover:text-yellow-300 transition-colors py-2">About</Link>
             <Link href="/contact" className="block text-white hover:text-yellow-300 transition-colors py-2">Contact</Link>
             {user ? (
-              <Link href="/account" className="block text-white hover:text-yellow-300 transition-colors py-2">Account</Link>
+              <>
+                <Link href="/account/orders" className="block text-white hover:text-yellow-300 transition-colors py-2">My Orders</Link>
+                <Link href="/account" className="block text-white hover:text-yellow-300 transition-colors py-2">Account</Link>
+              </>
             ) : (
               <Link href="/auth" className="block text-white hover:text-yellow-300 transition-colors py-2">Sign In</Link>
             )}

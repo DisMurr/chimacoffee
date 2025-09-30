@@ -17,7 +17,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
     }
 
-    const items = (body as any)?.items;
+  const items = (body as any)?.items;
+  const userId = (body as any)?.user_id || null;
     if (!Array.isArray(items) || items.length === 0) {
       return NextResponse.json({ error: 'No items provided' }, { status: 400 });
     }
@@ -44,6 +45,7 @@ export async function POST(request: Request) {
       mode: 'payment',
       success_url: `${origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/cart`,
+      metadata: userId ? { user_id: String(userId) } : undefined,
     });
 
     return NextResponse.json({ id: session.id });

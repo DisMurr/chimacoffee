@@ -11,6 +11,7 @@ export default function AccountPage() {
   const [avatarUrl, setAvatarUrl] = useState('');
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -45,6 +46,27 @@ export default function AccountPage() {
     else setMessage('Saved');
   }
 
+  async function onAvatarFile(e: React.ChangeEvent<HTMLInputElement>) {
+    if (!user) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setMessage(null);
+    try {
+      const publicUrl = await uploadAvatar(user.id, file);
+      setAvatarUrl(publicUrl);
+      // Save immediately after upload
+      const payload: any = { id: user.id, avatar_url: publicUrl };
+      const { error } = await supabase.from('profiles').upsert(payload, { onConflict: 'id' });
+      if (error) setMessage(error.message);
+      else setMessage('Avatar updated');
+    } catch (err: any) {
+      setMessage(err?.message || 'Upload failed');
+    } finally {
+      setUploading(false);
+    }
+  }
+
   if (loading) return <div className="p-6">Loading…</div>;
   if (!user) return (
     <div className="p-6">
@@ -73,6 +95,11 @@ export default function AccountPage() {
           <label className="block text-sm mb-1">Avatar URL</label>
           <input value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} className="w-full border rounded px-3 py-2" />
         </div>
+        <div>
+          <label className="block text-sm mb-1">Upload avatar</label>
+          <input type="file" accept="image/*" onChange={onAvatarFile} />
+          {uploading && <p className="text-sm text-gray-600 mt-1">Uploading…</p>}
+        </div>
         {message && <p className="text-sm text-gray-600">{message}</p>}
         <button type="submit" disabled={saving} className="bg-amber-700 hover:bg-amber-800 text-white px-4 py-2 rounded">
           {saving ? 'Saving…' : 'Save Profile'}
@@ -85,4 +112,14 @@ export default function AccountPage() {
     </div>
   );
 }
+
+async function uploadAvatar(userId: string, file: File) {
+  const ext = file.name.split('.').pop() || 'jpg';
+  const path = `${userId}/${Date.now()}.${ext}`;
+  const { error: uploadError } = await supabase.storage.from('avatars').upload(path, file, { upsert: false, cacheControl: '3600', contentType: file.type });
+  if (uploadError) throw uploadError;
+  const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(path);
+  return urlData.publicUrl;
+}
+
 
