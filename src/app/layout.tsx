@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { CartProvider } from '../context/CartContext'
+import { AuthProvider } from '@/context/AuthContext'
 import { Playfair_Display, Montserrat } from 'next/font/google'
 import './globals.css'
 import Script from 'next/script'
@@ -59,8 +60,10 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`${playfair.className} ${montserrat.className}`}>
-  <CartProvider>{children}</CartProvider>
-</body>
+        <AuthProvider>
+          <CartProvider>{children}</CartProvider>
+        </AuthProvider>
+      </body>
     </html>
   )
 }

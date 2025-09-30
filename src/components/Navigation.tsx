@@ -6,10 +6,12 @@ import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import type { CartItem } from '../context/CartContext';
 import DarkModeToggle from './DarkModeToggle';
+import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
 
 export default function Navigation() {
   const { cart } = useCart();
+  const { user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -26,6 +28,11 @@ export default function Navigation() {
             <Link href="/menu" className="text-white hover:text-yellow-300 dark:text-gray-200 dark:hover:text-yellow-300 transition-colors" aria-label="Menu">Menu</Link>
             <Link href="/about" className="text-white hover:text-yellow-300 dark:text-gray-200 dark:hover:text-yellow-300 transition-colors" aria-label="About">About</Link>
             <Link href="/contact" className="text-white hover:text-yellow-300 transition-colors">Contact</Link>
+            {user ? (
+              <Link href="/account" className="text-white hover:text-yellow-300 transition-colors">Account</Link>
+            ) : (
+              <Link href="/auth" className="text-white hover:text-yellow-300 transition-colors">Sign In</Link>
+            )}
             <Link href="/cart" className="text-white hover:text-yellow-300 transition-colors">Cart ({cart.reduce((total: number, item: CartItem) => total + item.quantity, 0)})</Link>
             <DarkModeToggle />
           </div>
@@ -48,6 +55,11 @@ export default function Navigation() {
             <Link href="/menu" className="block text-white hover:text-yellow-300 transition-colors py-2">Menu</Link>
             <Link href="/about" className="block text-white hover:text-yellow-300 transition-colors py-2">About</Link>
             <Link href="/contact" className="block text-white hover:text-yellow-300 transition-colors py-2">Contact</Link>
+            {user ? (
+              <Link href="/account" className="block text-white hover:text-yellow-300 transition-colors py-2">Account</Link>
+            ) : (
+              <Link href="/auth" className="block text-white hover:text-yellow-300 transition-colors py-2">Sign In</Link>
+            )}
             <Link href="/cart" className="block text-white hover:text-yellow-300 transition-colors py-2">Cart ({cart.reduce((total: number, item: CartItem) => total + item.quantity, 0)})</Link>
             <div className="py-2"><DarkModeToggle /></div>
           </motion.div>
