@@ -26,7 +26,9 @@ export default async function AdminPage() {
           </div>
         </div>
         {lastLogin && (
-          <p className="text-xs text-amber-700 dark:text-gray-400 mb-4">Last login: {new Date(lastLogin.ts!).toLocaleString()} • ip_hash: {lastLogin.ip_hash}</p>
+          <p className="text-xs text-amber-700 dark:text-gray-400 mb-4">
+            Last login: <span suppressHydrationWarning>{new Date(lastLogin.ts!).toLocaleString()}</span> • ip_hash: {lastLogin.ip_hash}
+          </p>
         )}
         <p className="text-amber-800 dark:text-gray-300 mb-8">Describe the database change you want. A Pull Request with a migration will be generated.</p>
         <AdminClient />

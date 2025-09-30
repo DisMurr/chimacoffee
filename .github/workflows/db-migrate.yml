@@ -21,3 +21,5 @@ jobs:
         run: npm run db:migrate
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          PGSSLMODE: require
+          PGSSLREJECTUNAUTHORIZED: 'false'
