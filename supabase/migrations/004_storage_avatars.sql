@@ -1,5 +1,16 @@
 -- Create a public avatars bucket (if not exists) and policies
-select storage.create_bucket('avatars', public := true);
+do $$
+begin
+  -- Prefer the storage.create_bucket helper if available
+  begin
+    perform storage.create_bucket('avatars', true);
+  exception when undefined_function then
+    -- Fallback: upsert directly into storage.buckets
+    insert into storage.buckets (id, name, public)
+    values ('avatars', 'avatars', true)
+    on conflict (id) do update set public = excluded.public;
+  end;
+end$$;
 
 -- Allow anyone to read from the avatars bucket
 do $$
