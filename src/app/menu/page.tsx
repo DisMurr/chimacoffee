@@ -1,15 +1,18 @@
+export const dynamic = 'force-dynamic';
+
 import Navigation from '../../components/Navigation';
 import Footer from '../../components/Footer';
 import { supabase } from '../../lib/supabase';
 
 export default async function Menu() {
-  const { data: menuItems, error } = await supabase.from('menu_items').select('*');
-  if (error) console.warn('menu_items fetch error:', error.message);
+  let items: any[] = [];
+  try {
+    const { data } = await supabase.from('menu_items').select('*');
+    items = Array.isArray(data) ? data : [];
+  } catch {}
 
-  const items = Array.isArray(menuItems) ? menuItems : [];
   const coffees = items.filter((item) => item.category === 'coffee');
   const pastries = items.filter((item) => item.category === 'pastry');
-
   const isEmpty = items.length === 0;
 
   return (
