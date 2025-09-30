@@ -21,10 +21,21 @@ create table if not exists public.testimonials (
 alter table public.menu_items enable row level security;
 alter table public.testimonials enable row level security;
 
-create policy if not exists "Public read menu"
+-- Drop existing policies if present to avoid redefinition errors on re-run
+do $$
+begin
+  if exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'menu_items' and policyname = 'Public read menu') then
+    execute 'drop policy "Public read menu" on public.menu_items';
+  end if;
+  if exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'testimonials' and policyname = 'Public read testimonials') then
+    execute 'drop policy "Public read testimonials" on public.testimonials';
+  end if;
+end$$;
+
+create policy "Public read menu"
   on public.menu_items for select
   to anon, authenticated using (true);
 
-create policy if not exists "Public read testimonials"
+create policy "Public read testimonials"
   on public.testimonials for select
   to anon, authenticated using (true);
