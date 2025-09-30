@@ -1,347 +1,183 @@
-# ☕ Chima Coffee - Premium Coffee Experience Web Application
+# Supabase CLI
 
-![Chima Coffee](https://images.unsplash.com/photo-1559056199-641a0ac8b55e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=400)
+[![Coverage Status](https://coveralls.io/repos/github/supabase/cli/badge.svg?branch=main)](https://coveralls.io/github/supabase/cli?branch=main) [![Bitbucket Pipelines](https://img.shields.io/bitbucket/pipelines/supabase-cli/setup-cli/master?style=flat-square&label=Bitbucket%20Canary)](https://bitbucket.org/supabase-cli/setup-cli/pipelines) [![Gitlab Pipeline Status](https://img.shields.io/gitlab/pipeline-status/sweatybridge%2Fsetup-cli?label=Gitlab%20Canary)
+](https://gitlab.com/sweatybridge/setup-cli/-/pipelines)
 
-> Elevate your coffee experience with Chima Coffee - where premium brews meet exceptional digital craftsmanship.
+[Supabase](https://supabase.io) is an open source Firebase alternative. We're building the features of Firebase using enterprise-grade open source tools.
 
-## 📋 Table of Contents
+This repository contains all the functionality for Supabase CLI.
 
-- [🌟 Overview](#-overview)
-- [✨ Features](#-features)
-- [🛠️ Technology Stack](#️-technology-stack)
-- [🚀 Quick Start](#-quick-start)
-- [📦 Installation](#-installation)
-- [🏃‍♂️ Usage](#️-usage)
-- [🌐 Deployment](#-deployment)
-- [📁 Project Structure](#-project-structure)
-- [🎨 Design System](#-design-system)
-- [🔍 SEO & Performance](#-seo--performance)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-- [📞 Contact](#-contact)
-- [🙏 Acknowledgments](#-acknowledgments)
+- [x] Running Supabase locally
+- [x] Managing database migrations
+- [x] Creating and deploying Supabase Functions
+- [x] Generating types directly from your database schema
+- [x] Making authenticated HTTP requests to [Management API](https://supabase.com/docs/reference/api/introduction)
 
-## 🌟 Overview
+## Getting started
 
-Chima Coffee is a modern, responsive web application designed to showcase and promote a premium coffee shop experience. Built with cutting-edge web technologies, this application delivers a luxurious user experience that reflects the quality and sophistication of artisanal coffee culture.
+### Install the CLI
 
-The application features an immersive landing page with storytelling elements, interactive carousels, smooth animations, and a mobile-first design that works seamlessly across all devices.
-
-### 🎯 Mission
-
-To create a digital experience that captures the essence of premium coffee culture, connecting coffee enthusiasts with exceptional brews through an elegant and intuitive web platform.
-
-## ✨ Features
-
-### 🍵 Core Functionality
-- **Immersive Landing Page**: Hero section with parallax effects and premium typography
-- **Interactive Menu Showcase**: Carousel featuring signature coffees and pastries
-- **Storytelling Sections**: "From Bean to Brew" narrative highlighting the coffee journey
-- **Customer Testimonials**: Carousel with authentic reviews and star ratings
-- **Responsive Navigation**: Mobile-friendly hamburger menu with smooth animations
-
-### 🎨 User Experience
-- **Smooth Animations**: Framer Motion-powered transitions and hover effects
-- **Image Optimization**: Next.js Image component with automatic WebP conversion
-- **Accessibility**: WCAG-compliant design with proper alt texts and keyboard navigation
-- **Performance**: Optimized loading with lazy loading and code splitting
-
-### 📱 Technical Features
-- **Mobile-First Design**: Responsive across all screen sizes
-- **SEO Optimized**: Meta tags, structured data, and performance best practices
-- **Analytics Ready**: Google Analytics integration for user insights
-- **Fast Loading**: Optimized bundles and efficient asset delivery
-
-## 🛠️ Technology Stack
-
-### Frontend Framework
-- **Next.js 14** - React framework with App Router for optimal performance
-- **React 18** - Modern React with concurrent features
-- **TypeScript** - Type-safe development for better code quality
-
-### Styling & UI
-- **Tailwind CSS** - Utility-first CSS framework for rapid styling
-- **Framer Motion** - Production-ready motion library for animations
-- **Swiper** - Modern mobile touch slider for carousels
-- **React Icons** - Popular icon library for consistent iconography
-
-### Fonts & Assets
-- **Google Fonts**: Playfair Display (serif) and Montserrat (sans-serif)
-- **Unsplash Images**: High-quality, royalty-free coffee photography
-- **Optimized Assets**: Automatic image optimization and WebP conversion
-
-### Development Tools
-- **ESLint** - Code linting for consistent code quality
-- **Prettier** - Code formatting for maintainable codebase
-- **Git** - Version control with conventional commit messages
-
-### Deployment & Hosting
-- **Vercel** - Optimized hosting platform for Next.js applications
-- **GitHub** - Repository hosting and CI/CD integration
-
-## 🚀 Quick Start
-
-Get the Chima Coffee webapp running locally in minutes:
+Available via [NPM](https://www.npmjs.com) as dev dependency. To install:
 
 ```bash
-# Clone the repository
-git clone https://github.com/DisMurr/chimacoffee.git
-cd chimacoffee
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
+npm i supabase --save-dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the application.
-
-## 📦 Installation
-
-### Prerequisites
-
-- **Node.js** 18.17 or later
-- **npm** 8.0 or later (comes with Node.js)
-- **Git** for version control
-
-### Step-by-Step Installation
-
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/DisMurr/chimacoffee.git
-   cd chimacoffee
-   ```
-
-2. **Install Dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Environment Setup** (Optional)
-   - Copy `.env.example` to `.env.local` if you have environment variables
-   - Configure Google Analytics ID for tracking
-
-4. **Start Development Server**
-   ```bash
-   npm run dev
-   ```
-
-5. **Build for Production**
-   ```bash
-   npm run build
-   npm start
-   ```
-
-## 🏃‍♂️ Usage
-
-### Development Workflow
+To install the beta release channel:
 
 ```bash
-# Development server with hot reload
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# Lint code
-npm run lint
+npm i supabase@beta --save-dev
 ```
 
-### Key Components
+When installing with yarn 4, you need to disable experimental fetch with the following nodejs config.
 
-- **Navigation**: Responsive header with mobile menu
-- **Hero Section**: Immersive introduction with call-to-action
-- **Story Section**: Brand narrative and values
-- **Features**: Interactive cards showcasing services
-- **Menu Carousel**: Featured items with pricing
-- **Testimonials**: Customer reviews with photos
-- **Footer**: Contact information and newsletter signup
+```
+NODE_OPTIONS=--no-experimental-fetch yarn add supabase
+```
 
-### Customization
+> **Note**
+For Bun versions below v1.0.17, you must add `supabase` as a [trusted dependency](https://bun.sh/guides/install/trusted) before running `bun add -D supabase`.
 
-- **Colors**: Modify Tailwind config for brand colors
-- **Content**: Update text and images in component files
-- **Fonts**: Change Google Fonts in `layout.tsx`
-- **Animations**: Adjust Framer Motion settings for different effects
+<details>
+  <summary><b>macOS</b></summary>
 
-## 🌐 Deployment
+  Available via [Homebrew](https://brew.sh). To install:
 
-### Vercel (Recommended)
+  ```sh
+  brew install supabase/tap/supabase
+  ```
 
-1. **Connect Repository**
-   - Import your GitHub repository to Vercel
-   - Automatic deployments on push to main branch
+  To install the beta release channel:
+  
+  ```sh
+  brew install supabase/tap/supabase-beta
+  brew link --overwrite supabase-beta
+  ```
+  
+  To upgrade:
 
-2. **Environment Variables**
-   - Add `GA_MEASUREMENT_ID` for Google Analytics
-   - Configure domain settings
+  ```sh
+  brew upgrade supabase
+  ```
+</details>
 
-3. **Domain Setup**
-   - Connect custom domain (chimacoffee.com)
-   - Enable SSL certificate
+<details>
+  <summary><b>Windows</b></summary>
 
-### Admin security and ops
+  Available via [Scoop](https://scoop.sh). To install:
 
-- Admin session uses an opaque HMAC token with UA binding and a default 7d TTL; configure via env (`ADMIN_SESSION_TTL_SEC`).
-- Progressive hCaptcha is enabled after repeated failures; exponential backoff adds friction.
-- CSRF protection: login/logout POSTs check Origin; cookies are SameSite=Lax. Global CSP allows hCaptcha domains.
-- Secret rotation: set `ADMIN_SESSION_SECRET`, keep old secrets in `ADMIN_SESSION_SECRET_PREVIOUS` (comma-separated) until old sessions expire.
-- Denylist: revoke a specific session by adding its `jti` to `ADMIN_JTI_DENYLIST`.
-- Canonical host: set `CANONICAL_HOST` to force a single origin and avoid cookie split.
-- WAF: add Cloudflare/provider rate limit for `/api/admin/login` (e.g., 10/min/IP).
-- Alerts: set `SLACK_WEBHOOK_URL`. The scheduled workflow `.github/workflows/admin-alerts.yml` checks failure spikes every 10m.
-- Audit retention: migration `007_admin_auth_log_retention.sql` purges logs older than 90 days daily (if pg_cron available).
+  ```powershell
+  scoop bucket add supabase https://github.com/supabase/scoop-bucket.git
+  scoop install supabase
+  ```
 
-### Manual Deployment
+  To upgrade:
+
+  ```powershell
+  scoop update supabase
+  ```
+</details>
+
+<details>
+  <summary><b>Linux</b></summary>
+
+  Available via [Homebrew](https://brew.sh) and Linux packages.
+
+  #### via Homebrew
+
+  To install:
+
+  ```sh
+  brew install supabase/tap/supabase
+  ```
+
+  To upgrade:
+
+  ```sh
+  brew upgrade supabase
+  ```
+
+  #### via Linux packages
+
+  Linux packages are provided in [Releases](https://github.com/supabase/cli/releases). To install, download the `.apk`/`.deb`/`.rpm`/`.pkg.tar.zst` file depending on your package manager and run the respective commands.
+
+  ```sh
+  sudo apk add --allow-untrusted <...>.apk
+  ```
+
+  ```sh
+  sudo dpkg -i <...>.deb
+  ```
+
+  ```sh
+  sudo rpm -i <...>.rpm
+  ```
+
+  ```sh
+  sudo pacman -U <...>.pkg.tar.zst
+  ```
+</details>
+
+<details>
+  <summary><b>Other Platforms</b></summary>
+
+  You can also install the CLI via [go modules](https://go.dev/ref/mod#go-install) without the help of package managers.
+
+  ```sh
+  go install github.com/supabase/cli@latest
+  ```
+
+  Add a symlink to the binary in `$PATH` for easier access:
+
+  ```sh
+  ln -s "$(go env GOPATH)/bin/cli" /usr/bin/supabase
+  ```
+
+  This works on other non-standard Linux distros.
+</details>
+
+<details>
+  <summary><b>Community Maintained Packages</b></summary>
+
+  Available via [pkgx](https://pkgx.sh/). Package script [here](https://github.com/pkgxdev/pantry/blob/main/projects/supabase.com/cli/package.yml).
+  To install in your working directory:
+
+  ```bash
+  pkgx install supabase
+  ```
+
+  Available via [Nixpkgs](https://nixos.org/). Package script [here](https://github.com/NixOS/nixpkgs/blob/master/pkgs/development/tools/supabase-cli/default.nix).
+</details>
+
+### Run the CLI
 
 ```bash
-# Build the application
-npm run build
-
-# Export static files (if needed)
-npm run export
-
-# Deploy to your hosting provider
+supabase bootstrap
 ```
 
-## 📁 Project Structure
-
-```
-chimacoffee/
-├── public/                 # Static assets
-├── src/
-│   ├── app/               # Next.js App Router
-│   │   ├── globals.css    # Global styles
-│   │   ├── layout.tsx     # Root layout
-│   │   ├── page.tsx       # Landing page
-│   │   └── menu/          # Menu page
-│   │       └── page.tsx
-│   └── components/        # Reusable components (future)
-├── next.config.js         # Next.js configuration
-├── tailwind.config.js     # Tailwind CSS config
-├── package.json           # Dependencies and scripts
-├── README.md              # This file
-└── .gitignore            # Git ignore rules
-```
-
-## 🎨 Design System
-
-### Color Palette
-- **Primary**: Amber (#D97706) - Warm coffee tones
-- **Secondary**: Brown (#92400E) - Rich espresso
-- **Accent**: Gold (#F59E0B) - Premium highlights
-- **Neutral**: Cream (#FEF3C7) - Soft backgrounds
-
-### Typography
-- **Headings**: Playfair Display (serif) - Elegant and sophisticated
-- **Body**: Montserrat (sans-serif) - Clean and readable
-- **Hierarchy**: Consistent sizing scale for visual rhythm
-
-### Components
-- **Buttons**: Rounded corners with hover animations
-- **Cards**: Shadow effects with smooth transitions
-- **Carousels**: Touch-friendly with navigation controls
-- **Forms**: Clean inputs with focus states
-
-## 🔍 SEO & Performance
-
-### SEO Features
-- **Meta Tags**: Comprehensive title, description, and keywords
-- **Open Graph**: Social media sharing optimization
-- **Twitter Cards**: Enhanced Twitter sharing
-- **Structured Data**: JSON-LD for search engines
-- **Sitemap**: Automatic generation for crawlers
-
-### Performance Optimizations
-- **Image Optimization**: Automatic WebP conversion and lazy loading
-- **Code Splitting**: Dynamic imports for better loading
-- **Bundle Analysis**: Optimized chunk sizes
-- **Caching**: Efficient asset caching strategies
-- **Core Web Vitals**: Optimized for Google's metrics
-
-## 🤝 Contributing
-
-We welcome contributions to improve Chima Coffee! Please follow these guidelines:
-
-### Development Process
-
-1. **Fork the Repository**
-2. **Create a Feature Branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. **Make Changes**
-   - Follow TypeScript best practices
-   - Maintain consistent code style
-   - Add tests for new features
-4. **Commit Changes**
-   ```bash
-   git commit -m "feat: add amazing feature"
-   ```
-5. **Push and Create PR**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-
-### Code Standards
-
-- **TypeScript**: Strict type checking enabled
-- **ESLint**: Automated code linting
-- **Prettier**: Consistent code formatting
-- **Conventional Commits**: Standardized commit messages
-
-### Testing
+Or using npx:
 
 ```bash
-# Run tests
-npm test
-
-# Run linting
-npm run lint
-
-# Type checking
-npm run type-check
+npx supabase bootstrap
 ```
 
-## 📄 License
+The bootstrap command will guide you through the process of setting up a Supabase project using one of the [starter](https://github.com/supabase-community/supabase-samples/blob/main/samples.json) templates.
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Docs
 
-## 📞 Contact
+Command & config reference can be found [here](https://supabase.com/docs/reference/cli/about).
 
-**Chima Coffee**
-- **Website**: [https://chimacoffee.vercel.app](https://chimacoffee.vercel.app)
-- **Email**: info@chimacoffee.com
-- **Phone**: (123) 456-7890
-- **Address**: 123 Coffee Street, Brew City, Coffee Land
+## Breaking changes
 
-### Social Media
-- **Facebook**: [@ChimaCoffee](https://facebook.com/ChimaCoffee)
-- **Instagram**: [@ChimaCoffee](https://instagram.com/ChimaCoffee)
-- **Twitter**: [@ChimaCoffee](https://twitter.com/ChimaCoffee)
+We follow semantic versioning for changes that directly impact CLI commands, flags, and configurations.
 
-### Development Team
-- **Project Lead**: Chima Coffee Team
-- **Repository**: [GitHub](https://github.com/DisMurr/chimacoffee)
-- **Issues**: [GitHub Issues](https://github.com/DisMurr/chimacoffee/issues)
+However, due to dependencies on other service images, we cannot guarantee that schema migrations, seed.sql, and generated types will always work for the same CLI major version. If you need such guarantees, we encourage you to pin a specific version of CLI in package.json.
 
-## 🙏 Acknowledgments
+## Developing
 
-- **Next.js Team** for the incredible framework
-- **Vercel** for hosting and deployment platform
-- **Unsplash** for beautiful coffee photography
-- **Tailwind CSS** for the utility-first approach
-- **Framer Motion** for smooth animations
-- **Swiper** for carousel functionality
+To run from source:
 
-### Special Thanks
-
-Special thanks to the coffee community for inspiration and the open-source ecosystem that makes projects like this possible.
-
----
-
-*Brewed with ❤️ by the Chima Coffee team. Elevate your coffee experience, one pixel at a time.*
+```sh
+# Go >= 1.22
+go run . help
+```
