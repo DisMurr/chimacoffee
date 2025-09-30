@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
@@ -10,6 +10,19 @@ export default function AdminLoginPage() {
   const [status, setStatus] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const router = useRouter();
+  const [captchaRequired, setCaptchaRequired] = useState(false);
+  const [sitekey, setSitekey] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch('/api/admin/login')
+      .then((r) => r.json())
+      .then((d) => {
+        setCaptchaRequired(!!d.captcha);
+        setSitekey(d.sitekey || null);
+      })
+      .catch(() => {});
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -19,11 +32,17 @@ export default function AdminLoginPage() {
       const res = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password, hcaptcha: captchaToken }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setStatus(data?.error || `Failed (${res.status})`);
+        if (data?.error === 'captcha-required') {
+          setCaptchaRequired(true);
+          setSitekey(data?.sitekey || null);
+          setStatus('Please complete the CAPTCHA.');
+        } else {
+          setStatus(data?.error || `Failed (${res.status})`);
+        }
       } else {
         setStatus('Logged in. Redirecting…');
         setTimeout(() => router.push('/admin'), 500);
@@ -52,6 +71,12 @@ export default function AdminLoginPage() {
               required
             />
           </div>
+          {captchaRequired && sitekey && (
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-amber-900 dark:text-gray-200 mb-2">CAPTCHA</label>
+              <HCaptcha sitekey={sitekey} onVerify={setCaptchaToken} />
+            </div>
+          )}
           <button
             type="submit"
             disabled={pending}
@@ -65,4 +90,41 @@ export default function AdminLoginPage() {
       <Footer />
     </div>
   );
+}
+
+function HCaptcha({ sitekey, onVerify }: { sitekey: string; onVerify: (token: string) => void }) {
+  const [widgetReady, setWidgetReady] = useState(false);
+  useEffect(() => {
+    const id = 'hcaptcha-script';
+    if (document.getElementById(id)) {
+      setWidgetReady(true);
+      return;
+    }
+    const s = document.createElement('script');
+    s.id = id;
+    s.src = 'https://js.hcaptcha.com/1/api.js';
+    s.async = true;
+    s.defer = true;
+    s.onload = () => setWidgetReady(true);
+    document.body.appendChild(s);
+  }, []);
+
+  useEffect(() => {
+    if (!widgetReady) return;
+    // @ts-ignore
+    if (!window.hcaptcha) return;
+    const container = document.getElementById('hcaptcha-container');
+    if (!container) return;
+    // Clear previous widget
+    container.innerHTML = '';
+    // @ts-ignore
+    window.hcaptcha.render('hcaptcha-container', {
+      sitekey,
+      callback: (token: string) => onVerify(token),
+      'error-callback': () => {},
+      'expired-callback': () => {},
+    });
+  }, [widgetReady, sitekey, onVerify]);
+
+  return <div id="hcaptcha-container" className="mt-2" />;
 }
