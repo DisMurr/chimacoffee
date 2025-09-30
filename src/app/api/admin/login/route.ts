@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createRateLimiter, ipKey } from '@/lib/rateLimit';
 import { createAdminPayload, signAdminSession } from '@/lib/security';
+import { logAdminEvent } from '@/lib/adminAudit';
 // Failed login tracking (salted IP hash) in-memory
 type FailInfo = { count: number; first: number; last: number };
 const FAILS = new Map<string, FailInfo>();
@@ -104,12 +105,28 @@ export async function POST(req: NextRequest) {
     const ok = await verifyHCaptcha(captchaToken, req);
     if (!ok) {
       const sitekey = process.env.HCAPTCHA_SITEKEY || null;
+      await logAdminEvent({
+        event: 'admin_login_failure',
+        ip_hash: await keyForReq(req),
+        ip_raw: getIp(req),
+        user_agent: req.headers.get('user-agent'),
+        jti: null,
+        meta: { reason: 'captcha_failed' },
+      });
       // Do not increment failures here; CAPTCHA gate
       return NextResponse.json({ error: 'captcha-required', sitekey }, { status: 403 });
     }
   }
   if (password !== ADMIN_UI_PASSWORD) {
     await recordFailure(req);
+    await logAdminEvent({
+      event: 'admin_login_failure',
+      ip_hash: await keyForReq(req),
+      ip_raw: getIp(req),
+      user_agent: req.headers.get('user-agent'),
+      jti: null,
+      meta: { reason: 'bad_password' },
+    });
     return NextResponse.json({ error: 'Invalid password' }, { status: 401 });
   }
 
@@ -124,6 +141,14 @@ export async function POST(req: NextRequest) {
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 24 * 7,
+  });
+  await logAdminEvent({
+    event: 'admin_login_success',
+    ip_hash: await keyForReq(req),
+    ip_raw: getIp(req),
+    user_agent: req.headers.get('user-agent'),
+    jti: payload.jti,
+    meta: null,
   });
   return res;
 }
